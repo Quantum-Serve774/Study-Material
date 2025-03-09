@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B.Tech - Computer Science</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .sidebar {
+            position: fixed;
+            left: -250px;
+            top: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #111;
+            padding-top: 20px;
+            color: white;
+            transition: left 0.3s;
+            z-index: 1;
+        }
+        .sidebar a {
+            padding: 15px;
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+        .toggle-btn {
+            position: fixed;
+            top: 10px;
+            left: 0;
+            background-color: #111;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            transition: left 0.3s;
+            z-index: 2;
+        }
+        .main-content {
+            margin-left: 20px;
+            padding: 20px;
+        }
+        button.upload-btn, input[type="file"] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none;
+        }
+        ul li a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+
+<button class="toggle-btn" id="toggle-btn" onclick="toggleSidebar()">☰</button>
+<div class="sidebar" id="sidebar">
+    <a href="index.html">Home</a>
+</div>
+
+<div class="main-content">
+    <h1>B.Tech - Computer Science</h1>
+    <input type="file" id="fileInput">
+    <button class="upload-btn" onclick="uploadFile()">Upload Study Material</button>
+    <ul id="file-list"></ul>
+</div>
+
+<script>
+const folderId = '1DFIYQCVcYXNgF2l0A9wfYhSSoV_LyHnG';
+const uploadUrl = 'https://script.google.com/macros/s/AKfycbz8dq8ZGia1wf0-6JJsE4Q8HyBDSOMgtZGsXTrm8bJkTZkamsyiO6ZlrMIoW4EkrSs81g/exec';
+
+function toggleSidebar() {
+    var sidebar = document.getElementById('sidebar');
+    var button = document.getElementById('toggle-btn');
+    if (sidebar.style.left === '-250px') {
+        sidebar.style.left = '0';
+        button.style.left = '250px';
+    } else {
+        sidebar.style.left = '-250px';
+        button.style.left = '0';
+    }
+}
+
+function uploadFile() {
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert('Please select a file first.');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folderId', folderId);
+
+    fetch(uploadUrl, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('File uploaded successfully!');
+            addFileToList(data.fileName, data.fileUrl);
+        } else {
+            alert('Failed to upload file.');
+        }
+    })
+    .catch(error => alert('Error uploading file: ' + error));
+}
+
+function addFileToList(fileName, fileUrl) {
+    const fileList = document.getElementById('file-list');
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = fileUrl;
+    a.textContent = fileName;
+    a.target = '_blank';
+    li.appendChild(a);
+    fileList.appendChild(li);
+}
+</script>
+
+</body>
+</html>
