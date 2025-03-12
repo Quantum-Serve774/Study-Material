@@ -46,7 +46,7 @@
             margin-left: 20px;
             padding: 20px;
         }
-        button.upload-btn, input[type="file"] {
+        .upload-btn {
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
@@ -61,6 +61,11 @@
             text-decoration: none;
             color: #007BFF;
         }
+        .drive-folder {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -72,14 +77,14 @@
 
 <div class="main-content">
     <h1>B.Tech - Computer Science</h1>
-    <input type="file" id="fileInput">
     <button class="upload-btn" onclick="uploadFile()">Upload Study Material</button>
-    <ul id="file-list"></ul>
+    
+    <h2>Uploaded Files</h2>
+    <iframe class="drive-folder" src="https://drive.google.com/embeddedfolderview?id=1DFIYQCVcYXNgF2l0A9wfYhSSoV_LyHnG#list"></iframe>
 </div>
 
 <script>
 const folderId = '1DFIYQCVcYXNgF2l0A9wfYhSSoV_LyHnG';
-const uploadUrl = 'https://script.google.com/macros/s/AKfycbz8dq8ZGia1wf0-6JJsE4Q8HyBDSOMgtZGsXTrm8bJkTZkamsyiO6ZlrMIoW4EkrSs81g/exec';
 
 function toggleSidebar() {
     var sidebar = document.getElementById('sidebar');
@@ -94,43 +99,8 @@ function toggleSidebar() {
 }
 
 function uploadFile() {
-    const fileInput = document.getElementById('fileInput');
-    const file = fileInput.files[0];
-
-    if (!file) {
-        alert('Please select a file first.');
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('folderId', folderId);
-
-    fetch(uploadUrl, {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('File uploaded successfully!');
-            addFileToList(data.fileName, data.fileUrl);
-        } else {
-            alert('Failed to upload file.');
-        }
-    })
-    .catch(error => alert('Error uploading file: ' + error));
-}
-
-function addFileToList(fileName, fileUrl) {
-    const fileList = document.getElementById('file-list');
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-    a.href = fileUrl;
-    a.textContent = fileName;
-    a.target = '_blank';
-    li.appendChild(a);
-    fileList.appendChild(li);
+    const driveFolderUrl = 'https://drive.google.com/drive/folders/' + folderId;
+    window.open(driveFolderUrl, '_blank');
 }
 </script>
 
